@@ -18,19 +18,21 @@ function [result, simbols, num_phrases] = getLZ78EncodedTuples(input)
             current_position = trie.getRootPosition();
             inserted = false;
         end
-        [found, next_position] = trie.traversePosition(current_position, input(ii, :));
+
+        current_simbol = input(ii,:);
+        [found, next_position] = trie.traversePosition(current_position, current_simbol);
         if found
             current_position = next_position;
         else
             num_phrases = num_phrases + 1;
-            father_pos = trie.addInPosition(current_position, input(ii, :), num_phrases);
+            father_pos = trie.addInPosition(current_position, current_simbol, num_phrases);
             jj = ii + 1;
-            result(end+1,:) = {father_pos, input(ii, :)};
+            result(end+1,:) = {father_pos, current_simbol};
 
-            if isConfigured(simbols_dict) && isKey(simbols_dict, input(ii, :))
-                simbols_dict(input(ii, :)) = simbols_dict(input(ii, :)) + 1;
+            if isConfigured(simbols_dict) && isKey(simbols_dict, {current_simbol})
+                simbols_dict({current_simbol}) = simbols_dict({current_simbol}) + 1;
             else
-                simbols_dict(input(ii, :)) = 1;
+                simbols_dict({current_simbol}) = 1;
             end
             inserted = true;
         end
