@@ -1,6 +1,11 @@
 function [result, simbols, encoded_simbols, tuples] = getLZ78EncodedString(input)
-%GETLZ78ENCODEDSTRING Summary of this function goes here
-%   Detailed explanation goes here
+%GETLZ78ENCODEDSTRING Codifca una stringa di simboli
+%   Codifca una stringa di simboli utilizzando l'algoritmo LZ78
+%   Parametri:
+%   -   input è la stringa da codificare
+%   Valori di ritorno:
+%   -   result è la stringa codificata
+%   -   simbols è il vettore con tutti i s
     arguments
         input
     end
@@ -20,13 +25,13 @@ function [result, simbols, encoded_simbols, tuples] = getLZ78EncodedString(input
     for ii = 1:numel(simbols(:,1))
         simbol = simbols(ii,:);
         jj = ii - 1;
-        encoded_simbols(simbol) = {dec2bin(jj, num_bits_simbols) == '1'};
+        encoded_simbols(simbol) = {double(dec2bin(jj, num_bits_simbols) == '1')};
     end
 
     for ii = 1:num_phrases
         index = tuples(ii,1);
         simbol = tuples(ii,2);
-        result(ii,1:num_bits_indexes+1) = dec2bin(cell2mat(index), num_bits_indexes) == '1';
+        result(ii,1:num_bits_indexes) = double(dec2bin(cell2mat(index), num_bits_indexes) == '1');
         result(ii,num_bits_indexes+1:end) = cell2mat(encoded_simbols(simbol));
     end
 end

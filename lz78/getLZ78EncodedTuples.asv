@@ -15,7 +15,7 @@ function [result, simbols, num_phrases] = getLZ78EncodedTuples(input)
 
     % Inizializzazione delle strutture di supporto
     trie = Trie();
-    result = cell(length(input(:,end)),2);
+    result = cell(0,2);
     simbols_dict = dictionary();
     num_phrases = 0;
 
@@ -47,15 +47,11 @@ function [result, simbols, num_phrases] = getLZ78EncodedTuples(input)
             num_phrases = num_phrases + 1;
             
             % Aggiunta del nodo nell'albero nella posizione che corrisponde
-            % alla fine del prefisso della frase analizzata
+            % alla fine del prefisso della fr
             father_pos = trie.addInPosition(current_position, current_simbol, num_phrases);
             jj = ii + 1;
+            result(end+1,:) = {father_pos, current_simbol};
 
-            % Salvataggio della tupla (father_pos, current_simb)
-            result(num_phrases,:) = {father_pos, current_simbol};
-
-            % Aggiornamento del numero di occorrenze del simbolo elementare
-            % nella stringa
             if isConfigured(simbols_dict) && isKey(simbols_dict, {current_simbol})
                 simbols_dict({current_simbol}) = simbols_dict({current_simbol}) + 1;
             else
@@ -66,13 +62,9 @@ function [result, simbols, num_phrases] = getLZ78EncodedTuples(input)
     end
     simbols = simbols_dict.keys;
 
-    % Salvataggio dell'ultima frase trovata ancora non inserita nei
-    % risultati
     if inserted == false && found == true
-        result(num_phrases+1,:) = current_position.getNodeTuple();
+        result(end+1,:) = current_position.getNodeTuple();
         num_phrases = num_phrases + 1;
     end
-
-    result = result(1:num_phrases,:);
 end
 
